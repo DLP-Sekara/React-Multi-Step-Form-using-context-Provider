@@ -3,15 +3,39 @@ import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../MultiStepContext/MultiStepContext";
 
 function FirstForm() {
-  const { setCurrentStep, setuserData, userData, data } =
+  const [firstNameError, setfirstNameError] = useState("");
+  const [secondNameError, setsecondNameError] = useState("");
+  const [addressError, setaddressError] = useState("");
+
+  const { setCurrentStep, setuserData, userData } =
     useContext(MultiStepContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setCurrentStep(2);
+
+    //field validation
+    const nameRegex = /^[A-z ]{2,20}$/;
+    const addressRegex = /^[A-z ]{2,20}$/;
+    setaddressError("");
+    setsecondNameError("");
+    setfirstNameError("");
+
+    if (userData.firstName.match(nameRegex)) {
+      if (userData.secondName.match(nameRegex)) {
+        if (userData.address.match(addressRegex)) {
+          setCurrentStep(2);
+        } else {
+          setaddressError("Enter valid address");
+        }
+      } else {
+        setsecondNameError("Enter valid second name");
+      }
+    } else {
+      setfirstNameError("Enter valid first name");
+    }
   };
   const [disabled, setDisabled] = useState(false);
-  useEffect(() => {;
+  useEffect(() => {
     userData.firstName && userData.secondName && userData.address
       ? setDisabled(false)
       : setDisabled(true);
@@ -25,13 +49,15 @@ function FirstForm() {
             variant="outlined"
             name="firstName"
             type="text"
-            value={userData["firstName"]}
+            value={userData["firstName"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={firstNameError !== ""}
+            helperText={firstNameError}
           />
         </div>
 
@@ -41,13 +67,15 @@ function FirstForm() {
             variant="outlined"
             name="secondName"
             type="text"
-            value={userData["secondName"]}
+            value={userData["secondName"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={secondNameError !== ""}
+            helperText={secondNameError}
           />
         </div>
 
@@ -57,13 +85,15 @@ function FirstForm() {
             variant="outlined"
             name="address"
             type="text"
-            value={userData["address"]}
+            value={userData["address"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={addressError !== ""}
+            helperText={addressError}
           />
         </div>
         <div>

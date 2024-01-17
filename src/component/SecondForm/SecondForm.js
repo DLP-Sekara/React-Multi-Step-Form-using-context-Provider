@@ -3,12 +3,31 @@ import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../MultiStepContext/MultiStepContext";
 
 function SecondForm() {
+  const [emailError, setemailError] = useState("");
+  const [contactError, setcontactError] = useState("");
+
   const { setCurrentStep, setuserData, userData } =
     useContext(MultiStepContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setCurrentStep(3);
+
+    //field validation
+    const emailRegex = /^[A-z 2-9]+@[A-z 2-9]+\.[A-z 2-9]+$/;
+    const contactRegex = /^[0-9.]{10}$/;
+    setemailError("");
+    setcontactError("");
+
+    if (userData.email.match(emailRegex)) {
+      if (userData.contact.match(contactRegex)) {
+        setCurrentStep(3);
+      } else {
+        setcontactError("Enter valid contact");
+      }
+    } else {
+      setemailError("Enter valid email");
+    }
+    
   };
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {
@@ -24,7 +43,7 @@ function SecondForm() {
             label="Email"
             variant="outlined"
             name="email"
-            value={userData["email"]}
+            value={userData["email"] || ""}
             type="email"
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
@@ -32,6 +51,8 @@ function SecondForm() {
             margin="normal"
             color="secondary"
             required
+            error={emailError !== ""}
+            helperText={emailError}
           />
         </div>
 
@@ -41,13 +62,15 @@ function SecondForm() {
             variant="outlined"
             name="contact"
             type="number"
-            value={userData["contact"]}
+            value={userData["contact"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={contactError !== ""}
+            helperText={contactError}
           />
         </div>
 

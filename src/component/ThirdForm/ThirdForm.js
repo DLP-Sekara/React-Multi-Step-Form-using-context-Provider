@@ -3,11 +3,30 @@ import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../MultiStepContext/MultiStepContext";
 
 function ThirdForm() {
-  const { setCurrentStep, setuserData,userData, data, submitOnAction } =
+  const [cityError, setCityError] = useState("");
+  const [comapnyError, setComapnyError] = useState("");
+
+  const { setCurrentStep, setuserData, userData, submitOnAction } =
     useContext(MultiStepContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    //field validation
+    const cityRegex = /^[A-z 0-9]{2,20}$/;
+    const comapnyRegex = /^[A-z 0-9]{2,20}$/;
+    setCityError("");
+    setComapnyError("");
+
+    if (userData.comapny.match(comapnyRegex)) {
+      if (userData.city.match(cityRegex)) {
+        submitOnAction();
+      } else {
+        setCityError("Enter valid city name");
+      }
+    } else {
+      setComapnyError("Enter valid comapny name");
+    }
   };
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {
@@ -22,13 +41,15 @@ function ThirdForm() {
             variant="outlined"
             name="comapny"
             type="text"
-            value={userData["comapny"]}
+            value={userData["comapny"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={comapnyError !== ""}
+            helperText={comapnyError}
           />
         </div>
 
@@ -38,13 +59,15 @@ function ThirdForm() {
             variant="outlined"
             name="city"
             type="text"
-            value={userData["city"]}
+            value={userData["city"] || ""}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
             required
+            error={cityError !== ""}
+            helperText={cityError}
           />
         </div>
 
@@ -62,7 +85,7 @@ function ThirdForm() {
             variant="contained"
             color="primary"
             style={{ margin: 5 }}
-            onClick={() => submitOnAction()}
+            type="submit"
           >
             Submit
           </Button>

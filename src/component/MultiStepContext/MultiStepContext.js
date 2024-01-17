@@ -1,6 +1,5 @@
 import React, { createContext, useState } from "react";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 export const MultiStepContext = createContext();
 
@@ -11,31 +10,27 @@ export const MultiStepProvider = ({ children }) => {
 
   function submitOnAction() {
     setData((data) => [...data, userData]);
-    if (toast) {
-      toast.success("User Added Successfully!", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    }
-    console.log(userData);
+    console.log("User Added Successfully! ", userData);
     setuserData("");
     setCurrentStep(1);
   }
   return (
-    <><div>
-      <MultiStepContext.Provider
-        value={{
-          currentStep,
-          setCurrentStep,
-          userData,
-          setuserData,
-          data,
-          setData,
-          submitOnAction,
-        }}
-      >
-        {children}
-      </MultiStepContext.Provider>
-    </div><ToastContainer /></>
-    
+    <>
+      <div>
+        <MultiStepContext.Provider
+          value={{
+            currentStep,
+            setCurrentStep,
+            userData,
+            setuserData,
+            data,
+            setData,
+            submitOnAction,
+          }}
+        >
+          {children}
+        </MultiStepContext.Provider>
+      </div>
+    </>
   );
 };
