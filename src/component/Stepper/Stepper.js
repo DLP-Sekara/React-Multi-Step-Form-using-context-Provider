@@ -8,6 +8,7 @@ import FirstForm from "../FirstForm/FirstForm";
 import SecondForm from "../SecondForm/SecondForm";
 import ThirdForm from "../ThirdForm/ThirdForm";
 import { MultiStepContext } from "../MultiStepContext/MultiStepContext";
+
 const steps = ["Fill Form One", "Fill Form Two", "Fill Form Three"];
 
 export default function HorizontalLinearAlternativeLabelStepper() {
@@ -23,15 +24,17 @@ export default function HorizontalLinearAlternativeLabelStepper() {
     }
   }
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={currentStep-1} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {renderForm(currentStep)}
-    </Box>
+    <>
+      <Box sx={{ width: "100%" }}>
+        <Stepper activeStep={currentStep - 1} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        {renderForm(currentStep)}
+      </Box>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../MultiStepContext/MultiStepContext";
 
 function ThirdForm() {
@@ -9,6 +9,10 @@ function ThirdForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+  const [disabled, setDisabled] = useState(false);
+  useEffect(() => {
+    userData.comapny && userData.city ? setDisabled(false) : setDisabled(true);
+  }, [userData]);
   return (
     <div className="App">
       <form onSubmit={handleSubmit}>
@@ -17,12 +21,14 @@ function ThirdForm() {
             label="Company"
             variant="outlined"
             name="comapny"
-            value={data["comapny"]}
+            type="text"
+            value={userData["comapny"]}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
+            required
           />
         </div>
 
@@ -31,12 +37,14 @@ function ThirdForm() {
             label="City"
             variant="outlined"
             name="city"
-            value={data["city"]}
+            type="text"
+            value={userData["city"]}
             onChange={(e) =>
               setuserData({ ...userData, [e.target.name]: e.target.value })
             }
             margin="normal"
             color="secondary"
+            required
           />
         </div>
 
@@ -44,13 +52,16 @@ function ThirdForm() {
           <Button
             variant="contained"
             color="secondary"
+            style={{ margin: 5 }}
             onClick={() => setCurrentStep(2)}
           >
             Back
           </Button>
           <Button
+            disabled={disabled}
             variant="contained"
             color="primary"
+            style={{ margin: 5 }}
             onClick={() => submitOnAction()}
           >
             Submit
